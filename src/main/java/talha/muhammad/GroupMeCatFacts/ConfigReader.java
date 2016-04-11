@@ -1,29 +1,29 @@
 package talha.muhammad.GroupMeCatFacts;
 
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ConfigReader extends GroupmeBot{
-	@SuppressWarnings("finally")
-	public static String getBotID() {
-		String botId = null;
+public class ConfigReader extends GroupmeBot {
+		public String getBotID() throws IOException {
 		Properties prop = new Properties();
-		InputStream input = null;
+		String botId;
 		try {
+			
+			String propFileName = "config.properties";
+			InputStream inputStream;
 
-			input = new FileInputStream("config/config.properties");
+			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 
-			// load a properties file
-			prop.load(input);
-			botId = prop.getProperty("BotId");
-
-		} catch (IOException ex) {
-			ex.printStackTrace();
+			if (inputStream != null) {
+				prop.load(inputStream);
+			} else {
+				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+			}
 		} finally {
-			return botId;
+			botId = prop.getProperty("BotId");
 		}
-		
+		return botId;
 	}
 }
